@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SSE Example</title>
+</head>
+<body>
+
+<h1>Server-Sent Events Example</h1>
+
+<div id="sse-data"></div>
+
+<script>
+  // Initialize an EventSource object
+  const eventSource = new EventSource('http://localhost:3000/events');
+
+  // Handle incoming messages
+  eventSource.onmessage = (event) => {
+    const displayElement = document.getElementById('sse-data');
+    displayElement.innerHTML += `Data received: ${event.data}<br>`;
+  };
+
+  // Handle any errors
+  eventSource.onerror = (error) => {
+    console.error('EventSource failed:', error);
+    eventSource.close();
+  };
+</script>
+
+</body>
+</html>
