@@ -6,7 +6,8 @@
 [Канал на YouTube](https://www.youtube.com/@serginyo90)
 
 Структура репозитория
-* long-polling: Проект рассказывает что такое long polling
+
+- long-polling: Проект рассказывает что такое long polling
 
 Установка
 
