@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CreateObjectURL and RevokeObjectURL Example</title>
+  <style>
+    #line {
+      width: 100%;
+      display: flex;
+      height: 1px;
+      background-color: #000;
+      margin: 20px 0;
+    }
+
+    .chunk {
+      flex: 1;
+      border: 1px solid black;
+      padding: 10px;
+      position: relative;
+      display: flex;
+      cursor: pointer;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #thumbnail {
+      display: none;
+      position: absolute;
+      z-index: 1000;
+      height: 108px;
+    }
+  </style>
+</head>
+
+<body>
+  <button onClick="onLoadList();">Load List</button>
+  <button onClick="onLoadImages();">Load Images</button>
+  <ul id="fileList"></ul>
+  <img id="thumbnail" alt="Thumbnail" />
+  <div id="line"></div>
+  <script>
+    const thumbnail = document.getElementById('thumbnail');
+    const images = [];
+    function onLoadList() {
+      fetch('http://localhost:3000/list-assets')
+        .then(response => response.json())
+        .then(files => {
+          const fileList = document.getElementById('fileList');
+          files.forEach(file => {
+            images.push(file);
+            const li = document.createElement('li');
+            li.textContent = file;
+            fileList.appendChild(li);
+          });
+        })
+        .catch(error => {
+          console.error('Failed to fetch list of assets:', error);
+        });
+    }
+    function onLoadImages() {
+      // Запрашиваем все изображения параллельно
+      images.forEach(link => {
+        fetchImage(link);
+      });
+    }
+
+    let blobURLCache = {};
+
+    // Функция для получения изображения в виде BLOB-объекта и установки его в элемент изображения.
+    function fetchImageAndSetToImgElement(imgUrl, imgElementId) {
+      // Если URL-адрес изображения уже находится в кеше, используйте его.
+      if (blobURLCache[imgUrl]) {
+        const imgElement = document.getElementById(imgElementId);
+        imgElement.src = blobURLCache[imgUrl];
+        return;
+      }
+    }
+    function fetchImage(imgUrl) {
+      fetch(`http://localhost:3000/assets/${imgUrl}`)
+        .then(response => response.blob())
+        .then(blob => {
+          const objUrl = URL.createObjectURL(blob);
+          blobURLCache[imgUrl] = objUrl; // Кешерируем URL-адрес объекта BLOB
+
+          splitIntoChunks(Object.keys(blobURLCache).length);
+        })
+        .catch(error => {
+          console.error('Error fetching the image:', error);
+        });
+    }
+    function splitIntoChunks(numChunks) {
+      const lineDiv = document.getElementById('line');
+
+      // Если lineDiv не существует, выходим из функции
+      if (!lineDiv) return;
+
+      // Очищаем исходное содержимое div
+      lineDiv.innerHTML = '';
+
+      // Добавляем куски в lineDiv
+      for (let i = 1; i <= numChunks; i++) {
+        const chunkDiv = document.createElement('div');
+        chunkDiv.classList.add('chunk');
+        chunkDiv.innerHTML = `${i}`;
+        chunkDiv.addEventListener('mouseover', () => {
+          const blob = blobURLCache[`sepadere_canyon_${i}.png`];
+          thumbnail.style.display = 'block';
+          thumbnail.style.left = event.clientX - 160 + 'px';
+          thumbnail.style.top = event.clientY - 80 + 'px';
+          thumbnail.src = blob;
+        });
+        chunkDiv.addEventListener('mousemove', () => {
+          // Обновляем позицию миниатюры при перемещении курсора
+          thumbnail.style.left = event.clientX - 100 + 'px';
+          thumbnail.style.top = event.clientY - 120 + 'px';
+        });
+        chunkDiv.addEventListener('mouseout', () => {
+          thumbnail.style.display = 'none';
+        });
+        lineDiv.appendChild(chunkDiv);
+      }
+    }
+  </script>
+</body>
+
+</html>

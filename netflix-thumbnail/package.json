@@ -1,0 +1,29 @@
+{
+  "name": "netflix-thumbnail",
+  "version": "1.0.0",
+  "description": "Create thumnails for NETFLIX movies",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Serginyo90/experiments.git#main"
+  },
+  "keywords": [
+    "netflix",
+    "NETFLIX",
+    "CreateObjectURL",
+    "RevokeObjectURL",
+    "thumbnail"
+  ],
+  "author": "Sergii Cherbadzhy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Serginyo90/experiments/issues"
+  },
+  "homepage": "https://github.com/Serginyo90/experiments/tree/main#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
