@@ -1,0 +1,99 @@
+/* Цвет и фон */
+body {
+  /* цвет текста для тела документа */
+  color: #333;
+  /* цвет фона для тела документа */
+  background-color: #f8f8f8;
+  margin-bottom: 22px;
+}
+
+h1 {
+  /* цвет текста для заголовков H1 */
+  color: #555;
+  /* цвет фона для заголовков H1 */
+  background-color: #eaeaea;
+  /* фоновое изображение для заголовков H1 */
+  background-image: url('background.img');
+  /* фоновое изображение не будет повторяться */
+  background-repeat: no-repeat;
+  /* фоновое изображение будет расположено по центру */
+  background-position: center;
+  /* фоновое изображение будет покрывать всю доступную область */
+  background-size: cover;
+  margin-bottom: 22px;
+}
+
+/* Размеры и отступы (Box Model) */
+p {
+  /* ширина параграфа */
+  width: 80%;
+  /* высота параграфа, автоматически рассчитывается */
+  height: auto;
+  /* внутренний отступ параграфа */
+  padding: 10px;
+  /* внешний отступ параграфа (верхний и нижний) */
+  margin: 20px 0;
+  /* ширина и высота включают в себя padding и border */
+  box-sizing: border-box;
+}
+
+/* Границы (Borders) */
+.box {
+  /* стиль границы - сплошная линия, ширина 1 пиксель, цвет - светло-серый */
+  border: 1px solid #ddd;
+  /* скругление углов границы */
+  border-radius: 4px;
+  /* цвет границы */
+  border-color: #ccc;
+  /* стиль границы - пунктирная линия */
+  border-style: dashed;
+  /* ширина границы */
+  border-width: 2px;
+  margin-bottom: 22px;
+}
+
+/* Тени (Shadows) */
+.shadow-box {
+  /* тень для элемента: смещение по X и Y, размытие, цвет */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 22px;
+}
+
+.text-with-shadow {
+  /* тень для текста: смещение по X и Y, размытие, цвет */
+  text-shadow: 2px 2px 4px #aaa;
+  margin-bottom: 22px;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    background-color: lightblue;
+  }
+
+  h1 {
+    display: none;
+  }
+}
+
+/* Универсальный селектор - самый низкий приоритет */
+* {
+  color: blue;
+}
+
+/* Селектор типа элемента */
+h1 {
+  color: green;
+}
+
+/* Селектор класса */
+.my-class {
+  color: red;
+}
+
+/* Селектор идентификатора - высокий приоритет */
+#my-id {
+  color: purple;
+}
+
+/* Инлайновые стили - самый высокий приоритет */
+/* <h1 style="color: orange;">Заголовок</h1> */
