@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Подтверждение регистрации</title>
+    <script>
+      window.onload = function () {
+        confirmRegistration();
+      };
+      function getCookie(name) {
+        const matches = document.cookie.match(
+          new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[]\\\/\+^])/g, '\\$1') + '=([^;]*)')
+        );
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+      }
+      function confirmRegistration() {
+        if (!getCookie('confirmCookie')) {
+          // Установка куки на 5 секунд
+          document.cookie = 'confirmCookie=true; max-age=30';
+          // Отправка POST-запроса
+          fetch('http://localhost:3000/approve', {
+            method: 'POST',
+          })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1>Благодарим за подтверждение регистрации</h1>
+  </body>
+</html>
