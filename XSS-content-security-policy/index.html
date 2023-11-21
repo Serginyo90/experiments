@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>CSP Example</title>
+  <!-- CSP Header -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'nonce-rAndom' 'sha256-HOswWd5B6WbzAr2AoxmMGoYQJZ2kDPcV21/533+4OlA=' *.googleapis.com/; style-src 'nonce-rAndom2'">
+</head>
+
+<body>
+  <h1 id="h1-id">
+    Content Security Policy Example
+  </h1>
+  <h2 id="h2-id">
+    Content Security Policy Example H2
+  </h2>
+  <script src="script.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>const el = document.getElementById("h1-id"); el.onclick = () => { alert("Hello World!"); }</script>
+  <script nonce="rAndom">
+    const el1 = document.getElementById("h2-id");
+    el1.onclick = () => {
+      alert("Hello World! H2");
+    }
+  </script>
+  <style nonce="rAndom2">
+    h1 {
+      color: red;
+    }
+  </style>
+</body>
+
+</html>
