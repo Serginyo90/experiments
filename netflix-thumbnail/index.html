@@ -67,16 +67,6 @@
     }
 
     let blobURLCache = {};
-
-    // Функция для получения изображения в виде BLOB-объекта и установки его в элемент изображения.
-    function fetchImageAndSetToImgElement(imgUrl, imgElementId) {
-      // Если URL-адрес изображения уже находится в кеше, используйте его.
-      if (blobURLCache[imgUrl]) {
-        const imgElement = document.getElementById(imgElementId);
-        imgElement.src = blobURLCache[imgUrl];
-        return;
-      }
-    }
     function fetchImage(imgUrl) {
       fetch(`http://localhost:3000/assets/${imgUrl}`)
         .then(response => response.blob())
