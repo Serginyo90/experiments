@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JWT</title>
+  </head>
+
+  <body>
+    <h1>Загрузка файлов</h1>
+
+    Файл:
+    <button id="request">Запросить токен</button>
+    <div id="output" style="width: 300px; overflow-wrap: break-word"></div>
+    JWT токен: <input type="text" id="input" />
+    <button id="validate">Проверка токена</button>
+    <div id="validate-result"></div>
+
+    <script>
+      const btnRequest = document.getElementById('request');
+      const btnValidate = document.getElementById('validate');
+      const divOutput = document.getElementById('output');
+      const input = document.getElementById('input');
+      const divValidateResult = document.getElementById('validate-result');
+
+      btnRequest.addEventListener('click', async () => {
+        const response = await fetch('http://localhost:8080/request-token');
+        console.log('response', response);
+        const token = await response.text();
+        divOutput.textContent = token;
+      });
+      btnValidate.addEventListener('click', async () => {
+        const response = await fetch('http://localhost:8080/validate-token', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            authorization: input.value,
+          },
+        });
+        const result = await response.text();
+        if (response.status === 200) {
+          divValidateResult.style.color = 'green';
+        } else {
+          divValidateResult.style.color = 'red';
+        }
+        divValidateResult.textContent = result;
+      });
+    </script>
+  </body>
+</html>

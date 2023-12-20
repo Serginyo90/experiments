@@ -1,0 +1,19 @@
+{
+  "name": "jwt",
+  "version": "1.0.0",
+  "description": "Аутентификация и Авторизация с помощью JWT",
+  "main": "index.js",
+  "scripts": {
+    "i": "npm install"
+  },
+  "keywords": [
+    "JWT",
+    "Authentication",
+    "Authorization"
+  ],
+  "author": "Sergii Cherbadzhy",
+  "license": "ISC",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  }
+}
