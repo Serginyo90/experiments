@@ -1,0 +1,434 @@
+{
+  "name": "__log_expenses",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "agentOutput"
+            },
+            {
+              "name": "userInput"
+            },
+            {
+              "name": "agentIntermediateSteps"
+            },
+            {
+              "name": "agentError"
+            },
+            {
+              "name": "workflowName"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -360,
+        -80
+      ],
+      "id": "38dd16d9-7965-4db0-afc2-96e82c128f2c",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "let totalCost = 0;\nlet inputTokens = 0;\nlet outputTokens = 0;\nlet totalTokens = 0;\nlet promptTokens = 0;\nlet completionTokens = 0;\nlet totalTokens2 = 0;\nconst actions = [];\nlet outputFromAgent = ''\n\nfunction parseOutput(intermediateSteps, output) {\n  outputFromAgent = output;\n  intermediateSteps.forEach(step => {\n    console.log('_step_', step)\n    const { action } = step;\n    actions.push({ tool: action.tool, toolInput: action.toolInput })\n    action.messageLog.forEach(message => {\n      const usageResponseData = message.kwargs.response_metadata.usage\n      const usageMetadataData = message.kwargs.usage_metadata\n      totalCost += usageResponseData.cost;\n      totalTokens += usageResponseData.total_tokens;\n      promptTokens += usageResponseData.prompt_tokens;\n      completionTokens += usageResponseData.completion_tokens;\n      inputTokens += usageMetadataData.input_tokens;\n      outputTokens += usageMetadataData.output_tokens;\n      totalTokens2 += usageMetadataData.total_tokens;\n    });\n  });\n}\n\nfor (const item of $input.all()) {\n  parseOutput(JSON.parse(item.json.agentIntermediateSteps), item.json.agentOutput)\n  userInput = item.json.userInput;\n}\n\n\nreturn [{ json: { \n  totalCost,\n  inputTokens,\n  outputTokens,\n  totalTokens,\n  promptTokens,\n  completionTokens,\n  totalTokens2,\n  actions,\n  output: outputFromAgent,\n  userInput,\n}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        20
+      ],
+      "id": "0bdeda84-e955-40d3-a274-1a617f0ce9e9",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1iZUc_OA7Zl9-Yn1TbKGOnuVnSH0aKu6AI8LCUGyc0pQ",
+          "mode": "list",
+          "cachedResultName": "n8n Agent Logs (file -> make a copy)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iZUc_OA7Zl9-Yn1TbKGOnuVnSH0aKu6AI8LCUGyc0pQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iZUc_OA7Zl9-Yn1TbKGOnuVnSH0aKu6AI8LCUGyc0pQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now.format('D hh:mm a') }}",
+            "Workflow": "={{ $workflow.name }}",
+            "Input": "={{ $json.userInput }}",
+            "Output": "={{ $json.output }}",
+            "Actions": "={{ JSON.stringify($json.actions, null, 2) }}",
+            "Total Cost": "={{ $json.totalCost }}",
+            "Input Tokens": "={{ $json.promptTokens || $json.inputTokens }}",
+            "Output Tokens": "={{ $json.completionTokens || $json.outputTokens }}",
+            "Total Tokens": "={{ $json.totalTokens || $json.totalTokens2 }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Input",
+              "displayName": "Input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Output",
+              "displayName": "Output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Actions",
+              "displayName": "Actions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Input Tokens",
+              "displayName": "Input Tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Output Tokens",
+              "displayName": "Output Tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Total Tokens",
+              "displayName": "Total Tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Total Cost",
+              "displayName": "Total Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        300,
+        20
+      ],
+      "id": "4499e7b9-4a0a-4b18-a124-e372f2736810",
+      "name": "Log1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OrQrZdJ5er3Vl1o5",
+          "name": "s.cherbadzhy"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a8f7cb07-7c3f-4e5a-80f2-56dd2c0adbc7",
+              "leftValue": "={{ $json.agentError }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -140,
+        -80
+      ],
+      "id": "f13c4060-2b5f-41d7-ad6e-2e7ae2a42ba0",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1iZUc_OA7Zl9-Yn1TbKGOnuVnSH0aKu6AI8LCUGyc0pQ",
+          "mode": "list",
+          "cachedResultName": "n8n Agent Logs (file -> make a copy)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iZUc_OA7Zl9-Yn1TbKGOnuVnSH0aKu6AI8LCUGyc0pQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iZUc_OA7Zl9-Yn1TbKGOnuVnSH0aKu6AI8LCUGyc0pQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now.format('D hh:mm a') }}",
+            "Workflow": "={{ $workflow.name }}",
+            "Input": "={{ $json.userInput }}",
+            "Error Message": "={{ $json.agentError }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Input",
+              "displayName": "Input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Output",
+              "displayName": "Output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Actions",
+              "displayName": "Actions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Input Tokens",
+              "displayName": "Input Tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Output Tokens",
+              "displayName": "Output Tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Total Tokens",
+              "displayName": "Total Tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Total Cost",
+              "displayName": "Total Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        80,
+        -180
+      ],
+      "id": "8ed81aea-6573-4483-beff-8cfb6889dae6",
+      "name": "Log Error",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OrQrZdJ5er3Vl1o5",
+          "name": "s.cherbadzhy"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Log1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log1": {
+      "main": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3f87282f-a030-4faf-aba0-f0b47910234b",
+  "meta": {
+    "instanceId": "a9518720d2b2cc296a4abd515fb1d073ae32405ffd715d1e1b5874a6e49ba8a3"
+  },
+  "id": "oG0kgjja7t6f1xU2",
+  "tags": []
+}

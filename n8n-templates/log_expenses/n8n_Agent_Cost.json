@@ -1,0 +1,412 @@
+{
+  "name": "n8n Agent Cost",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -280,
+        -260
+      ],
+      "id": "6b0a0de5-ffda-493f-9923-dc9c093b1134",
+      "name": "Telegram Trigger",
+      "webhookId": "dcfa2f69-f5d4-4f3d-926f-d14f6e3e59f3",
+      "credentials": {
+        "telegramApi": {
+          "id": "qhKA9PhEYKS8giGj",
+          "name": "youtube_channel_recording_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=Error: {{ $('AI Agent').item.json.error }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        496,
+        -160
+      ],
+      "id": "af61d6a5-a53b-4610-9d96-0316fc24f7c4",
+      "name": "Error Response",
+      "webhookId": "4129bcc4-aa42-4404-8cf4-9731422f7e86",
+      "credentials": {
+        "telegramApi": {
+          "id": "qhKA9PhEYKS8giGj",
+          "name": "youtube_channel_recording_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        -360
+      ],
+      "id": "d5e40f83-b289-4712-841f-eb9279d5e08b",
+      "name": "Response",
+      "webhookId": "e71223d1-8880-4a0f-98b1-d7b002378954",
+      "credentials": {
+        "telegramApi": {
+          "id": "qhKA9PhEYKS8giGj",
+          "name": "youtube_channel_recording_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "returnIntermediateSteps": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -100,
+        -260
+      ],
+      "id": "18eaec6c-c722-4bd1-9b86-02f45bc681a1",
+      "name": "AI Agent",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "oG0kgjja7t6f1xU2",
+          "mode": "list",
+          "cachedResultName": "__log_expenses"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "userInput": "={{ $('Telegram Trigger').item.json.message.text }}",
+            "agentError": "={{ $json.error }}",
+            "workflowName": "={{ $workflow.name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "agentOutput",
+              "displayName": "agentOutput",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "userInput",
+              "displayName": "userInput",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "agentIntermediateSteps",
+              "displayName": "agentIntermediateSteps",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "agentError",
+              "displayName": "agentError",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "workflowName",
+              "displayName": "workflowName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        280,
+        -160
+      ],
+      "id": "bd9d1767-28b4-47fb-bbdd-650ba41fa4a4",
+      "name": "log expenses1"
+    },
+    {
+      "parameters": {
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "@tavily/n8n-nodes-tavily.tavilyTool",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -40
+      ],
+      "id": "fdbce192-10cc-44bf-9429-90edee94b9d8",
+      "name": "Tavily",
+      "credentials": {
+        "tavilyApi": {
+          "id": "E56Pp5YpGPNDNywn",
+          "name": "Tavily account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "oG0kgjja7t6f1xU2",
+          "mode": "list",
+          "cachedResultName": "__log_expenses"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "agentOutput": "={{ $json.output }}",
+            "userInput": "={{ $('Telegram Trigger').item.json.message.text }}",
+            "agentIntermediateSteps": "={{ JSON.stringify($json.intermediateSteps) }}",
+            "agentError": "={{ $json.error }}",
+            "workflowName": "={{ $workflow.name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "agentOutput",
+              "displayName": "agentOutput",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "userInput",
+              "displayName": "userInput",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "agentIntermediateSteps",
+              "displayName": "agentIntermediateSteps",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "agentError",
+              "displayName": "agentError",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "workflowName",
+              "displayName": "workflowName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        280,
+        -360
+      ],
+      "id": "8d4400d0-c64b-443b-a4ce-b41a41d56d0e",
+      "name": "log expenses"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        -40
+      ],
+      "id": "673172bd-02d7-4645-97e5-eb3696422e54",
+      "name": "4.1 mini",
+      "credentials": {
+        "openRouterApi": {
+          "id": "oqWHuMfLvTAccp73",
+          "name": "personal"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 126025920,
+          "message": {
+            "message_id": 136,
+            "from": {
+              "id": 270378407,
+              "is_bot": false,
+              "first_name": "Serginyo90",
+              "username": "Serginyo90",
+              "language_code": "en"
+            },
+            "chat": {
+              "id": 270378407,
+              "first_name": "Serginyo90",
+              "username": "Serginyo90",
+              "type": "private"
+            },
+            "date": 1750017166,
+            "text": "Weather in London?"
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "log expenses",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "log expenses1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "log expenses1": {
+      "main": [
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "log expenses": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4.1 mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cbd74ab0-9167-49ed-97fe-cca01cc1cbaa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a9518720d2b2cc296a4abd515fb1d073ae32405ffd715d1e1b5874a6e49ba8a3"
+  },
+  "id": "h9gFi0H9S2yg3hiU",
+  "tags": []
+}
