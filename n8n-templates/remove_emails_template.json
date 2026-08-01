@@ -305,7 +305,7 @@
                 "conditions": [
                   {
                     "leftValue": "={{ $('Loop Over Items').item.json.To }}",
-                    "rightValue": "s.cherbadzhy@gmail.com",
+                    "rightValue": "user@example.com",
                     "operator": {
                       "type": "string",
                       "operation": "contains"
@@ -353,7 +353,7 @@
                   {
                     "id": "ae64dc16-0f5c-4bb5-b15a-36f3cec146c9",
                     "leftValue": "={{ $('Loop Over Items').item.json.To }}",
-                    "rightValue": "c.cherbadzhy@gmail.com",
+                    "rightValue": "user2@example.com",
                     "operator": {
                       "type": "string",
                       "operation": "contains"

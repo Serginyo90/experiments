@@ -189,7 +189,7 @@
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "OrQrZdJ5er3Vl1o5",
-          "name": "s.cherbadzhy"
+          "name": "user"
         }
       }
     },
@@ -368,7 +368,7 @@
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "OrQrZdJ5er3Vl1o5",
-          "name": "s.cherbadzhy"
+          "name": "user"
         }
       }
     }

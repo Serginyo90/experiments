@@ -25,7 +25,7 @@
       "credentials": {
         "gmailOAuth2": {
           "id": "luGxJY9720GPvF8U",
-          "name": "serginyo1990@gmail.com course n8n"
+          "name": "user@example.com course n8n"
         }
       }
     },
@@ -86,7 +86,7 @@
       "credentials": {
         "openAiApi": {
           "id": "4DyHrQCQaCeTHzgc",
-          "name": "serginyo1990@gmail.com"
+          "name": "user@example.com"
         }
       }
     },
@@ -128,7 +128,7 @@
       "credentials": {
         "openAiApi": {
           "id": "4DyHrQCQaCeTHzgc",
-          "name": "serginyo1990@gmail.com"
+          "name": "user@example.com"
         }
       }
     },
@@ -157,7 +157,7 @@
       "credentials": {
         "pineconeApi": {
           "id": "42nmpCYhnXJRyYw7",
-          "name": "serginyo1990@gmail.com"
+          "name": "user@example.com"
         }
       }
     },
@@ -178,7 +178,7 @@
       "credentials": {
         "openAiApi": {
           "id": "4DyHrQCQaCeTHzgc",
-          "name": "serginyo1990@gmail.com"
+          "name": "user@example.com"
         }
       }
     },
@@ -204,7 +204,7 @@
       "credentials": {
         "gmailOAuth2": {
           "id": "luGxJY9720GPvF8U",
-          "name": "serginyo1990@gmail.com course n8n"
+          "name": "user@example.com course n8n"
         }
       }
     },
